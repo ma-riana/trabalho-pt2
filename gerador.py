@@ -1,18 +1,10 @@
-def gera_getter_setter(nome, tipo):
+import PySimpleGUI as sg
 
-    print(f'''
-    @property
-    def {nome}(self):
-        return self.__{nome}
+def init_components():
+   sg.ChangeLookAndFeel('Dark Gray 13')
+   for i in sg.Text.fonts_installed_list():
+      print(i)
 
-    @{nome}.setter
-    def {nome}(self, {nome}: {tipo}):
-        if isinstance({nome}, {tipo}):
-            self.__{nome} = {nome}
-    ''')
 
-def gera_selfs(nome):
-    print(f"self.__{nome} = {nome}")
 
-gera_getter_setter("funcionario", "Funcionario")
-gera_getter_setter("data", "str")
+init_components()

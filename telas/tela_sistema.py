@@ -1,26 +1,64 @@
 from telas.abstract_tela import AbstractTela
+import PySimpleGUI as sg
 
 
 class TelaSistema(AbstractTela):
 
     def __init__(self):
         super().__init__()
+        self.__window = None
+        self.init_components()
 
     def mostra_opcoes(self):
-        print("\nTELA PRINCIPAL: CONTROLE DE FILIAIS\n"
-              + "O que deseja fazer?\n"
-              + "1) Adicionar uma filial\n"
-              + "2) Excluir uma filial\n"
-              + "3) Modificar uma filial\n"
-              + "4) Listar filiais\n"
-              + "0) Sair\n")
-        opcao = super().le_int_validos([0, 1, 2, 3, 4], "Escolha uma opção: ")
-        return opcao
+        self.init_components()
+        event, values = self.__window.Read()
+        self.close()
+        return int(event)
+
+    def close(self):
+        self.__window.Close()
+
+    def init_components(self):
+        sg.ChangeLookAndFeel('Dark Gray 13')
+        font = "Yu Gothic UI Semibold", 11
+        sg.set_options(font=font)
+        layout = [
+            [sg.Text('Tela Principal: Controle de Filiais')],
+            [sg.Text('O que deseja fazer?')],
+            [sg.Button('Adicionar uma filial', key=1, size=[30, 1])],
+            [sg.Button('Excluir uma filial', key=2, size=[30, 1])],
+            [sg.Button('Modificar uma filial', key=3, size=[30, 1])],
+            [sg.Button('Listar filiais', key=4, size=[30, 1])],
+            [sg.Button('Sair', key=0, size=[30, 1])]
+        ]
+        self.__window = sg.Window('Sistema de manuzeio de filiais', layout, element_justification='c')
 
     def pega_dados_cadastro(self):
-        cep = self.le_cep("Informe o CEP: ")
-        cidade = input("Informe a cidade: ")
-        nova_filial = {"cep": cep, "cidade": cidade}
+
+        while True:
+            layout = [
+                [sg.Text('Cadastro de Filial')],
+                [sg.Text('Aviso.: CEPs e Cidades repetidas não podem ser cadastrados.')],
+                [sg.Text('CEP:', size=(15, 1)), sg.InputText('', key='cep')],
+                [sg.Text('Cidade:', size=(15, 1)), sg.InputText('', key='cidade')],
+                [sg.Button('Confirmar'), sg.Cancel('Cancelar')]
+            ]
+            self.__window = sg.Window('Sistema de manuzeio de filiais', layout, element_justification='c')
+            event, values = self.__window.Read()
+
+            # Checagem cep
+            resultado = self.le_cep(values['cep'])
+            if resultado[1] is False:
+                layout = [
+                    [sg.Text('Cadastro de Filial')],
+                    [sg.Text(resultado[0])],
+                    [sg.Button('Confirmar')]
+                ]
+                self.__window = sg.Window('Sistema de manuzeio de filiais', layout, element_justification='c')
+            else:
+                break
+
+        nova_filial = {"cep": resultado[0], "cidade": values['cidade']}
         return nova_filial
 
     def pega_cep(self):

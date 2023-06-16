@@ -1,6 +1,6 @@
 from telas.tela_gerente import TelaGerente
 from entidade.gerente import Gerente
-from exception.repeticao import Repeticao
+from exception.repeticao_exp import Repeticao
 from datetime import date
 
 class ControladorGerente:

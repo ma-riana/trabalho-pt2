@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
-from exception.negativeValueException import NegativeValueException
 from datetime import date
-from exception.opcao_invalida import OpcaoInvalida
+from exception.opcao_invalida_exp import OpcaoInvalida
+import PySimpleGUI as sg
 
 
 class AbstractTela(ABC):
@@ -36,19 +36,17 @@ class AbstractTela(ABC):
             except ValueError:
                 print('CPF inválido')
 
-    def le_cep(self, msg):
+    def le_cep(self, cep):
         while True:
-            print('Formatação CEP válido: 88000001 (8 ints)')
-            cep = input(msg)
             try:
                 if len(cep) == 8:
                     f1 = cep[:5]
                     f2 = cep[5:]
-                    return f'{f1}-{f2}'
+                    return f'{f1}-{f2}', True
                 else:
                     raise ValueError
             except ValueError:
-                print('Digite um valor válido para o CEP.')
+                return 'Digite um valor válido para o CEP.', False
 
     def le_data(self, msg):
         while True:
@@ -64,7 +62,7 @@ class AbstractTela(ABC):
                 else:
                     raise ValueError
             except ValueError:
-                print('Digite uma data válida (ex.: 01012000)')
+                print('Digite uma data válida.')
 
     def le_int_validos(self, int_validos: list, msg):
         while True:
@@ -99,9 +97,7 @@ class AbstractTela(ABC):
             try:
                 variavel_int = int(variavel)
                 if variavel_int < 0:
-                    raise NegativeValueException
+                    raise ValueError
                 return variavel_int
             except ValueError:
-                print('Esse valor deve ser um inteiro.')
-            except NegativeValueException:
-                print('Esse valor deve ser positivo.')
+                print('Esse valor deve ser um inteiro positivo.')

@@ -4,8 +4,8 @@ from controladores.controlador_gerente import ControladorGerente
 from controladores.controlador_contrato import ControladorContrato
 from controladores.controlador_cargo import ControladorCargo
 from telas.tela_sistema import TelaSistema
-from exception.repeticao import Repeticao
-from exception.naoExistencia import NaoExistencia
+from exception.repeticao_exp import Repeticao
+from exception.nao_existe_exp import NaoExistencia
 
 
 class ControladorSistema:
@@ -41,7 +41,6 @@ class ControladorSistema:
 
     def adicionar_filial(self):
         while True:
-            self.__tela_sistema.mostra_mensagem("\n=== Tela cadastro de filial ===")
             dados_nova_filial = self.__tela_sistema.pega_dados_cadastro()
             # Checagem de repetição
             if self.checagem_repeticao_cep(dados_nova_filial['cep']):
@@ -83,20 +82,20 @@ class ControladorSistema:
         try:
             for _ in self.__lista_filiais:
                 if _.cep == cep:
-                    Repeticao('CEP', cep).msg()
                     raise Repeticao('CEP', cep)
             return True
         except Repeticao:
+            self.__tela_sistema.mostra_mensagem(Repeticao('CEP', cep).msg())
             return False
 
     def checagem_repeticao_cidade(self, cidade):
         try:
             for _ in self.__lista_filiais:
                 if _.cidade == cidade:
-                    Repeticao('Cidade', cidade).msg()
                     raise Repeticao('Cidade', cidade)
             return True
         except Repeticao:
+            self.__tela_sistema.mostra_mensagem(Repeticao('Cidade', cidade).msg())
             return False
 
     def busca_por_cep(self, msg):

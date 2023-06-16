@@ -1,5 +1,5 @@
 from telas.abstract_tela import AbstractTela
-from exception.naoExistencia import NaoExistencia
+from exception.nao_existe_exp import NaoExistencia
 
 
 class TelaCargo(AbstractTela):

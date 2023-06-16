@@ -1,8 +1,8 @@
 from entidade.fun_comum import FunComum
 from telas.tela_fun_comum import TelaFuncomum
-from exception.repeticao import Repeticao
-from exception.naoExistencia import NaoExistencia
-from exception.filial_errada import FilialErrada
+from exception.repeticao_exp import Repeticao
+from exception.nao_existe_exp import NaoExistencia
+from exception.filial_errada_exp import FilialErrada
 
 
 class ControladorFunComumEsp:
