@@ -33,16 +33,15 @@ class ControladorFunComumEsp:
             novo_nome = self.__tela_fun_comum.pega_input("Digite o novo nome:", 'Modificação de dados.')
             funcionario.nome = novo_nome
         if opcao == 2:
-            novo_cpf = self.__tela_fun_comum.le_cpf("Digite o novo CPF: ")
+            novo_cpf = self.__tela_fun_comum.pega_cpf('Digite o novo CPF: ')
             funcionario.cpf = novo_cpf
         if opcao == 3:
-            nova_data_nasc = self.__tela_fun_comum.le_data("Digite a nova data de nascimento:")
+            nova_data_nasc = self.__tela_fun_comum.pega_data('Digite a nova data de nascimento: ')
             funcionario.data_nasc = nova_data_nasc
         if opcao == 0:
             return
 
     def add_fun_comum(self):
-        self.__tela_fun_comum.mostra_mensagem("\n=== Cadastro de funcionario comum ===")
         # Realizando a checagem de repetição de CPF
         while True:
             novo_fun_comum = self.__tela_fun_comum.pega_dados_cadastro()
@@ -68,6 +67,7 @@ class ControladorFunComumEsp:
 
     def demitir(self):
         fun_comum = self.busca_fun_por_cpf("Digite o CPF do funcionário para a demissão: ")
+        print(fun_comum.cpf)
         self.__controlador_contrato.demitir(fun_comum)
 
     def acessar_contrato(self):
@@ -75,17 +75,19 @@ class ControladorFunComumEsp:
         self.__controlador_contrato.inicializa_sistema(self, fun_comum)
 
     def listar_todos(self):
-        lista = self.__funcionarios
-        if len(lista) > 0:
-            self.__tela_fun_comum.mostra_mensagem('\n=== Listagem de funcionários ===')
-            for fun in lista:
-                self.__tela_fun_comum.listagem(fun.nome, fun.cpf, fun.data_nasc)
+        lista = []
+        if len(self.__funcionarios) > 0:
+            for fun in self.__funcionarios:
+                lista.append(self.__tela_fun_comum.formata_listagem(fun.nome, fun.cpf, fun.data_nasc))
+            self.__tela_fun_comum.listagem('Listagem de funcionários', lista)
         else:
             self.__tela_fun_comum.mostra_mensagem('Lista vazia.')
 
     def busca_fun_por_cpf(self, msg):
         while True:
-            cpf_buscado = self.__tela_fun_comum.le_cpf(msg)
+            cpf_buscado = self.__tela_fun_comum.pega_cpf(msg)
+            if cpf_buscado is None:
+                self.inicializa_sistema()
             lista_fun_geral = self.__controlador_filial.controlador_fun_comum.fun_comum_dao.get_all()
             print("conferindo se a lista de func gerais está sendo acessada: ", lista_fun_geral)
             try:
@@ -99,7 +101,8 @@ class ControladorFunComumEsp:
             except NaoExistencia:
                 self.__tela_fun_comum.mostra_mensagem('Funcionario não encontrado. Tente novamente.')
             except FilialErrada:
-                FilialErrada(cpf_buscado).msg()
+                self.__tela_fun_comum.mostra_mensagem(FilialErrada(cpf_buscado).msg())
+
 
     def checagem_repeticao(self, cpf):
         while True:

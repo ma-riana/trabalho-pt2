@@ -36,7 +36,6 @@ class TelaSistema(AbstractTela):
         self.__window = sg.Window('Sistema de manuzeio de filiais', layout, element_justification='c')
 
     def pega_dados_cadastro(self):
-
         layout = [
             [sg.Text('Cadastro de Filial')],
             [sg.Text('Aviso.: CEPs e Cidades repetidas não podem ser cadastrados.')],

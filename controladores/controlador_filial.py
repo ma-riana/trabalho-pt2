@@ -71,17 +71,19 @@ class ControladorFilial:
             return
 
     def acessar_contratos(self):
-        contratos = self.__controlador_contrato.contratos
+        contratos = self.__controlador_contrato.contrato_dao.get_all()
+        contratos_locais = []
         for contrato in contratos:
             if contrato.filial == self.__filial:
-                self.__controlador_contrato.listar_contrato_auto(contrato)
+                contratos_locais.append(contrato)
+        self.__controlador_contrato.listar_contrato_auto(contratos_locais)
 
     def listar_fun_ativos(self):
         gerente = self.__filial.gerente
         lista_fun = self.__filial.funcionarios
         lista_listagem = []
 
-        lista_listagem.append(self.__tela_filial.listagem(gerente.nome, gerente.cpf, gerente.data_nasc))
+        lista_listagem.append(self.__tela_filial.formata_listagem(gerente.nome, gerente.cpf, gerente.data_nasc))
         if len(lista_fun) > 0:
             for fun in lista_fun:
                 if fun.atividade is True:

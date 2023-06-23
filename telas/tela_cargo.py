@@ -20,7 +20,6 @@ class TelaCargo(AbstractTela):
         return int(event)
     
     def init_components(self):
-        sg.ChangeLookAndFeel('Dark Gray 13')
         layout = [
             [sg.Text('TELA DE MODIFICAÇÃO: CARGOS')],
             [sg.Text('O que deseja fazer?')],
@@ -33,36 +32,61 @@ class TelaCargo(AbstractTela):
         self.__window = sg.Window('Controle dos Cargos', layout, element_justification='c')
 
     def pega_dados_cargo(self, id=None):
+        layout = [
+            [sg.Text('Inserindo os dados do cargo')],
+            [sg.Text(size=(15, 1), key='-OUTPUT-')],
+            [sg.Text('Titulo:', size=(15, 1)), sg.InputText('', key='titulo')],
+            [sg.Text('Salário:', size=(15, 1)), sg.InputText('', key='salario')],
+            [sg.Button('Confirmar'), sg.Button('Cancelar')]
+        ]
+        self.__window = sg.Window('Controle de cargos', layout, element_justification='c')
 
+        event, values = self.__window.read()
+        if event == 'Confirmar':
+            if self.le_salario(values['salario']):
+                if id is None:
+                    id = self.gera_id()
+                return {"id": id, "titulo": values['titulo'], "salario": values['salario']}
+            else:
+                self.__window['-OUTPUT-'].update('Digite um CEP válido.')
+        if event in [sg.WIN_CLOSED, 'Cancelar']:
+            self.__window.close()
+            return None
 
+    def formata_listagem(self, id, titulo, salario):
+        return f'ID: {id}\nTítulo: {titulo}\nSalário: {salario}\n'
 
+    def pega_cargo(self, lista):
 
-        print("\n~~~~~~~~ Inserindo os dados do cargo ~~~~~~~~")
-        if (id == None):
-            id = self.gera_id()
-        titulo = input("Digite o nome da função: ")
-        salario = super().le_int_positivo("Digite o salário desse cargo em números: ")
+        layout = [[sg.Text('Selecionador de cargos. Faça a busca por id.')]]
+        lista_cargos = ''
+        for cargo in lista:
+            lista_cargos += f'ID: {cargo.id}\nTítulo: {cargo.titulo}\n'
+        layout.append([sg.Multiline(default_text=lista_cargos, size=(35, 3))])
+        layout.append([sg.Text('ID para a busca:', size=(15, 1)), sg.InputText('', key='id')])
+        layout.append([sg.Button('Confirmar'), sg.Button('Cancelar')])
+        layout.append( [sg.Text(size=(15, 1), key='-OUTPUT-')])
+        self.__window = sg.Window('Controle de cargos', layout, element_justification='c')
 
-        return {"id": id, "titulo": titulo, "salario": salario}
-
-    def mostra_cargo(self, dados_cargo):
-        print(f"\nIdentificação: {dados_cargo['id']}"
-              f"\nTítulo: {dados_cargo['titulo']}"
-              f"\nSalário: {dados_cargo['salario']}")
-
-    def pega_cargo(self, lista_cargos):
-        print('\n=== Cargos disponíveis ===')
-        index = 1
-        for cargo in lista_cargos:
-            if cargo.titulo != 'Gerente':
-                print(f'{index}. {cargo.titulo}')
-                index += 1
-        print('\n')
-        opcao = self.le_intervalo(1, index, "Escolha uma opção: ")
-        return opcao
-
-    def mostra_mensagem(self, msg: str):
-        super().mostra_mensagem(msg)
+        while True:
+            event, values = self.__window.read()
+            if event == 'Confirmar':
+                try:
+                    if values['id'] == '':
+                        raise ValueError
+                    else:
+                        id = int(values['id'])
+                        if id not in self.__id_gerados:
+                            raise NaoExistencia()
+                        self.__window.Close()
+                        return id
+                except ValueError:
+                    self.__window['-OUTPUT-'].update('Digite um ID.')
+                except NaoExistencia:
+                    self.__window['-OUTPUT-'].update('Digite um ID válido.')
+            if event in [sg.WIN_CLOSED, 'Cancelar']:
+                self.__window.Close()
+                return None
 
     def gera_id(self):
         novo_id = (self.__id_gerados[-1] + 1)
@@ -71,13 +95,3 @@ class TelaCargo(AbstractTela):
 
     def exclui_id(self, id: int):
         self.__id_gerados.remove(id)
-
-    def le_id(self, tipo: str):
-        while True:
-            try:
-                id = int(input(f"\nEscolha qual {tipo} digitando seu identificador: "))
-                if id not in self.__id_gerados:
-                    raise NaoExistencia()
-                return id
-            except NaoExistencia:
-                print(f"Não foi encontrado(a) nenhum(a) {tipo} com essa identificação.")

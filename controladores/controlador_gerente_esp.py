@@ -21,16 +21,15 @@ class ControladorGerenteEsp:
             funcao_escolhida()
 
     def modificar_dados(self):
-        self.__tela_gerente.mostra_mensagem('\n=== Modificação de dados ===', 'Modificação de dados.')
         opcao = self.__tela_gerente.menu_modificacao()
         if opcao == 1:
             novo_nome = self.__tela_gerente.pega_input("Digite o novo nome:", 'Modificação de dados.')
             self.__gerente.nome = novo_nome
         if opcao == 2:
-            novo_cpf = self.__tela_gerente.pega_input("Digite o novo CPF:", 'Modificação de dados.')
+            novo_cpf = self.__tela_gerente.pega_cpf('Digite o novo CPF: ')
             self.__gerente.cpf = novo_cpf
         if opcao == 3:
-            nova_data_nasc = self.__tela_gerente.pega_input("Digite a nova data de nascimento:", 'Modificação de dados.')
+            nova_data_nasc = self.__tela_gerente.pega_data('Digite a nova data de nascimento: ')
             self.__gerente.data_nasc = nova_data_nasc
         if opcao == 0:
             return
@@ -43,17 +42,20 @@ class ControladorGerenteEsp:
 
     def subs_cargo(self):
         infos_gerencia = self.__controlador_sistema.controlador_gerente.add_gerente()
-        filial = self.__controlador_contrato.pega_contrato_por_cpf_auto(self.__gerente.cpf).filial
+        filial = self.__controlador_contrato.pega_contrato_por_cpf(self.__gerente.cpf).filial
         dados_contrato = {'data_inicio': infos_gerencia['data_inicio'], 'cargo': infos_gerencia['cargo'],
                           'empregado': infos_gerencia['funcionario'], 'filial': filial,
                           'empregador': infos_gerencia['empregador']}
         filial.gerente = infos_gerencia['funcionario']
+        self.__controlador_sistema.filial_dao.update(filial)
         self.__controlador_contrato.incluir_contrato(dados_contrato)
 
     def listar_contratos(self):
         if len(self.__gerente.contratos) > 0:
+            lista = []
             for contrato in self.__gerente.contratos:
-                self.__controlador_contrato.tela_contrato.listar_contrato(contrato)
+                lista.append(self.__controlador_contrato.tela_contrato.formata_contrato(contrato))
+            self.__tela_gerente.listagem(f'Listagem de contrator por {self.__gerente.nome}', lista)
         else:
             self.__tela_gerente.mostra_mensagem('Lista vazia.')
 

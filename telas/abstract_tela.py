@@ -73,11 +73,20 @@ class AbstractTela(ABC):
         f3 = int(data[4:])
         return date(f3, f2, f1)
 
+    def le_salario(self, salario):
+        try:
+            salario_float = float(salario)
+            if salario_float > 500:
+                return True
+            raise ValueError
+        except ValueError:
+            return False
+
     def listagem(self, titulo, lista_listagem):
         layout = [[sg.Text(titulo)]]
         for _ in lista_listagem:
             layout.append([sg.Text(_)])
-        self.__window = sg.Window('Listagem de Filiais', layout, element_justification='c')
+        self.__window = sg.Window('Listagem', layout, element_justification='c')
         event = self.__window.Read()
         if event == sg.WIN_CLOSED:
             self.init_components()

@@ -11,7 +11,6 @@ class TelaFuncionario(AbstractTela):
         pass
 
     def menu_modificacao(self):
-        sg.ChangeLookAndFeel('Dark Gray 13')
         layout = [
             [sg.Text('O que deseja modificar?')],
             [sg.Button('Nome', key=1, size=(30, 1))],
@@ -25,7 +24,6 @@ class TelaFuncionario(AbstractTela):
         return int(event)
     
     def pega_dados_cadastro(self):
-        sg.ChangeLookAndFeel('Dark Gray 13')
         layout = [
             [sg.Text('Cadastro de Funcionário')],
             [sg.Text(size=(15, 1), key='-OUTPUT-')],
@@ -55,4 +53,32 @@ class TelaFuncionario(AbstractTela):
             if event == sg.WIN_CLOSED:
                 break
         self.__window.close()
+
+    def formata_listagem(self, nome, cpf, data_nasc):
+        return f'Nome: {nome}\nCPF: {cpf}\nData nascimento: {data_nasc}\n'
+
+    def pega_cpf(self, msg):
+        while True:
+            cpf_buscado = self.pega_input(msg, 'Controle de funcionários')
+            if cpf_buscado is None:
+                return cpf_buscado
+            try:
+                if self.le_cpf(cpf_buscado):
+                    cpf_buscado = self.formata_cpf(cpf_buscado)
+                    return cpf_buscado
+                raise ValueError
+            except ValueError:
+                self.mostra_mensagem('Digite um valor válido de CPF.')
+
+    def pega_data(self, msg):
+        while True:
+            nova_data = self.pega_input(msg, 'Controle de funcionários')
+            if nova_data is None:
+                return nova_data
+            try:
+                if self.le_data(nova_data):
+                    nova_data = self.formata_data(nova_data)
+                    return nova_data
+            except ValueError:
+                self.mostra_mensagem('Digite uma data válida.')
 

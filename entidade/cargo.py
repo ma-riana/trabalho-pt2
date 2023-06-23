@@ -18,7 +18,7 @@ class Cargo:
 
     @id.setter
     def id(self, id: int):
-            self.__id = id
+        self.__id = id
 
     @titulo.setter
     def titulo(self, titulo: str):

@@ -17,7 +17,6 @@ class ContratoDAO(ListDAO):
                         return
                     super().add(len(super().cache), contrato)
 
-
     def update(self, cpf: str, contrato: Contrato):
         if((contrato is not None) and isinstance(contrato, Contrato) and isinstance(cpf, str)):
             for indice in range(len(super().cache)):
@@ -26,7 +25,7 @@ class ContratoDAO(ListDAO):
                     return
 
     def get(self, key: str):
-        print("chave: ", key)
+        print("chave:", key)
         if isinstance(key, str):
             return super().get(key)
 

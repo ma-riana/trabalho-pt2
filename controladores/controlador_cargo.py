@@ -16,36 +16,35 @@ class ControladorCargo:
 
     def incluir_cargo(self):
         dados_cargo = self.__tela_cargo.pega_dados_cargo()
+        if dados_cargo is None:
+            return
         novo_cargo = Cargo(dados_cargo["id"], dados_cargo["titulo"], dados_cargo["salario"])
         self.__cargo_dao.add(novo_cargo)
 
     def alterar_cargo(self):
-        self.listar_todos_cargos()
-        id_cargo = self.__tela_cargo.le_id("cargo")
-        if id_cargo == 0:
-            self.__tela_cargo.mostra_mensagem("O cargo de Gerente deve permanecer com o mesmo título")
-        cargo = self.pega_cargo_por_id(id_cargo)
-
-        novos_dados_cargo = self.__tela_cargo.pega_dados_cargo(id_cargo)
-        if id_cargo != 0:
-            cargo.titulo = novos_dados_cargo["titulo"]
-        cargo.salario = novos_dados_cargo["salario"]
-        self.listar_cargo(cargo)
+        pass
 
     def listar_cargos_comuns(self):
         if len(self.__cargo_dao.get_all()) == 1: # se tiver apenas o gerente
-            print("A empresa ainda não possui cadastro de cargos de funcionários comuns no sistema.")
+            self.__tela_cargo.mostra_mensagem("A empresa ainda não possui cadastro de " +
+                                              "cargos de funcionários comuns no sistema.")
         else:
+            lista = []
             for cargo in self.__cargo_dao.get_all():
                 if cargo.titulo != "Gerente":
-                    self.__tela_cargo.mostra_cargo({"id": cargo.id, "titulo": cargo.titulo, "salario": cargo.salario})
+                    lista.append(self.__tela_cargo.formata_listagem(cargo.id, cargo.titulo, cargo.salario))
+                    self.__tela_cargo.listagem('Listagem de cargos', lista)
 
     def listar_todos_cargos(self):
+        lista = []
         for cargo in self.__cargo_dao.get_all():
-            self.__tela_cargo.mostra_cargo({"id": cargo.id, "titulo": cargo.titulo, "salario": cargo.salario})
+            lista.append(self.__tela_cargo.formata_listagem(cargo.id, cargo.titulo, cargo.salario))
+        self.__tela_cargo.listagem('Listagem de cargos', lista)
 
     def listar_cargo(self, cargo: Cargo):
-        self.__tela_cargo.mostra_cargo({"id": cargo.id, "titulo": cargo.titulo, "salario": cargo.salario})
+        lista = []
+        self.__tela_cargo.formata_listagem(cargo.id, cargo.titulo, cargo.salario)
+        self.__tela_cargo.listagem('Listagem de cargo', lista)
 
     def excluir_cargo(self):
         cargo = self.seleciona_cargo()
@@ -54,12 +53,8 @@ class ControladorCargo:
         self.__tela_cargo.exclui_id(cargo.id)
 
     def seleciona_cargo(self):
-        self.listar_cargos_comuns()
-        while True:
-            id = self.__tela_cargo.le_id("cargo")
-            if id != 0:
-                break
-        return self.pega_cargo_por_id(id)
+        cargo = self.__tela_cargo.pega_cargo(self.__cargo_dao.get_all())
+        return cargo
 
     def pega_cargo_por_id(self, id: int):
         for cargo in self.__cargo_dao.get_all():

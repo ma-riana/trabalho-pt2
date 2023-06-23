@@ -22,7 +22,6 @@ class ControladorContrato:
         return self.__contrato_dao
 
     def inicializa_sistema(self, controlador_de_retorno, objeto):
-        print("\ncontratos:", len(self.__contrato_dao.get_all()))
         lista_opcoes = {1: self.listar_contrato, 2: self.excluir_contrato,
                         3: self.modificar_contrato,
                         0: controlador_de_retorno.inicializa_sistema}
@@ -56,8 +55,10 @@ class ControladorContrato:
             self.__controlador_gerente.gerente_dao.update(dados_contrato['empregador'])
 
     def demitir(self, funcionario):
+        for _ in self.__contrato_dao.get_all():
+            print(_.empregado.cpf)
         contrato = self.__contrato_dao.get(funcionario.cpf)
-        data_final = self.__tela_contrato.le_data("Digite a data de finalização do contrato: ")
+        data_final = self.__tela_contrato.pega_data("Digite a data de finalização do contrato: ")
         contrato.data_final = data_final
         funcionario.atividade = False
 
@@ -86,19 +87,22 @@ class ControladorContrato:
         if opcao == 0:
             return
 
-
     def listar_contrato(self, objeto):
         cpf = objeto.cpf
         contrato = self.__contrato_dao.get(cpf)
-        self.__tela_contrato.listar_contrato(contrato)
+        lista = self.__tela_contrato.formata_contrato(contrato)
+        self.__tela_contrato.listagem('Lista de contrato(s)', lista)
 
-    def listar_contrato_auto(self, contrato):
-        self.__tela_contrato.listar_contrato(contrato)
+    def listar_contrato_auto(self, contratos):
+        lista = []
+        for contrato in contratos:
+            lista.append(self.__tela_contrato.formata_contrato(contrato))
+        self.__tela_contrato.listagem('Lista de contrato(s)', lista)
 
-    # def pega_contrato_por_cpf_auto(self, cpf):
-    #     for contrato in self.__contrato_dao:
-    #         if contrato.empregado.cpf == cpf:
-    #             return contrato
+    def pega_contrato_por_cpf(self, cpf):
+        for contrato in self.__contrato_dao.get_all():
+            if contrato.empregado.cpf == cpf:
+                return contrato
 
     def gera_id(self):
         if len(self.__contrato_dao.get_all()) > 0:
