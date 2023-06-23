@@ -2,6 +2,7 @@ from entidade.contrato import Contrato
 from telas.tela_contrato import TelaContrato
 from dao.contrato_dao import ContratoDAO
 from entidade.fun_comum import FunComum
+from entidade.gerente import Gerente
 
 
 class ControladorContrato:
@@ -39,64 +40,85 @@ class ControladorContrato:
                 controlador_de_retorno.inicializa_sistema()
 
     def incluir_contrato(self, dados_contrato):
+        # Recebendo as informações do contrato e montando o obj
         dados_contrato = dados_contrato
-        id = self.gera_id()
         dados_contrato['empregado'].atividade = True
 
-        novo_contrato = Contrato(id, dados_contrato['data_inicio'], dados_contrato['cargo'],
+        novo_contrato = Contrato(dados_contrato['data_inicio'], dados_contrato['cargo'],
                                  dados_contrato['empregado'], dados_contrato['filial'],
                                  dados_contrato['empregador'])
-        
+
+        # Incluindo informações DAO
         self.__contrato_dao.add(novo_contrato)
 
+        # Adicionando o contrato na lista de contratos do gerente vigente
         if isinstance(dados_contrato['empregado'], FunComum):
             self.__controlador_sistema.filial_dao.update(dados_contrato['filial'])
             dados_contrato['empregador'].add_contrato(novo_contrato)
             self.__controlador_gerente.gerente_dao.update(dados_contrato['empregador'])
 
     def demitir(self, funcionario):
-        for _ in self.__contrato_dao.get_all():
-            print(_.empregado.cpf)
+        # Procurando pelo contrato
         contrato = self.__contrato_dao.get(funcionario.cpf)
         data_final = self.__tela_contrato.pega_data("Digite a data de finalização do contrato: ")
+
+        # Atualizando informações DAO
         contrato.data_final = data_final
-        funcionario.atividade = False
+        self.__contrato_dao.update(contrato)
 
     def excluir_contrato(self, funcionario):
+        # Busca do contrato por cpf
         contrato = self.__contrato_dao.get(funcionario.cpf)
+        # Removendo os funcionários: exclusão de contrato resulta na exclusão permanente,
+        # já a demissão resulta somente no fim das atividades
+        if isinstance(funcionario, Gerente):
+            self.__controlador_sistema.controlador_gerente.subs_cargo(contrato.filial)
+            self.__controlador_sistema.controlador_gerente.gerente_dao.remove(funcionario.cpf)
+        if isinstance(funcionario, FunComum):
+            self.__controlador_sistema.controlador_fun_comum.fun_comum_dao.remove(funcionario.cpf)
         self.__contrato_dao.remove(contrato.empregado.cpf)
-        funcionario.atividade = False
 
     def modificar_contrato(self, funcionario):
+        # Chamada do menu de modificação e definição do contrato a ser modificado
         opcao = self.__tela_contrato.menu_modificacao()
         contrato = self.__contrato_dao.get(funcionario.cpf)
+
+        # Tratamento de cada uma das modificações
         if opcao == 1:
-            nova_data_emissao = self.__tela_contrato.le_data('Digite a nova data de inicio: ')
+            nova_data_emissao = self.__tela_contrato.pega_data('Digite a nova data de inicio: ')
             contrato.data_inicio = nova_data_emissao
         if opcao == 2:
-            nova_data_final = self.__tela_contrato.le_data('Digite a nova data final: ')
+            # Ao adicionar uma data de finalização do contrato, o a atividade dele torna-se falsa
+            nova_data_final = self.__tela_contrato.pega_data('Digite a nova data final: ')
             contrato.data_final = nova_data_final
             if funcionario.atividade is True:
                 funcionario.atividade(False)
         if opcao == 3:
+            # Utiliza-se da busca de filial do controlador do sistema
             nova_filial = self.__controlador_sistema.busca_por_cep('Digite a nova filial: ')
             contrato.filial = nova_filial
         if opcao == 4:
+            # Utiliza-se do selecionador de cargos do controlador de cargos
             cargo_novo = self.__controlador_cargo.selecionar_cargo()
             contrato.cargo = cargo_novo
+        if opcao != 0:
+            # Atualização do DAO
+            self.__contrato_dao.update(contrato)
         if opcao == 0:
             return
 
     def listar_contrato(self, objeto):
-        cpf = objeto.cpf
-        contrato = self.__contrato_dao.get(cpf)
-        lista = self.__tela_contrato.formata_contrato(contrato)
-        self.__tela_contrato.listagem('Lista de contrato(s)', lista)
-
-    def listar_contrato_auto(self, contratos):
-        lista = []
-        for contrato in contratos:
-            lista.append(self.__tela_contrato.formata_contrato(contrato))
+        # Realiza o acesso por uma lista de contratos
+        if isinstance(objeto, list):
+            lista = []
+            for contrato in objeto:
+                lista.append(self.__tela_contrato.formata_contrato(contrato))
+        # Realiza p acesso por funcionário
+        else:
+            contrato = self.__contrato_dao.get(objeto.cpf)
+            lista = [self.__tela_contrato.formata_contrato(contrato)]
+            print(lista)
+        # Faz a impressão final
         self.__tela_contrato.listagem('Lista de contrato(s)', lista)
 
     def pega_contrato_por_cpf(self, cpf):

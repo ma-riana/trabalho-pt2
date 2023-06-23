@@ -48,12 +48,16 @@ class ControladorCargo:
 
     def excluir_cargo(self):
         cargo = self.seleciona_cargo()
+        if cargo is None:
+            return
         self.__cargo_dao.remove(cargo.id)
-        self.listar_cargos_comuns()
         self.__tela_cargo.exclui_id(cargo.id)
 
     def seleciona_cargo(self):
-        cargo = self.__tela_cargo.pega_cargo(self.__cargo_dao.get_all())
+        cargo_id = self.__tela_cargo.pega_cargo(self.__cargo_dao.get_all())
+        if cargo_id is None:
+            return cargo_id
+        cargo = self.pega_cargo_por_id(cargo_id)
         return cargo
 
     def pega_cargo_por_id(self, id: int):

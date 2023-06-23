@@ -12,7 +12,6 @@ class ControladorFilial:
         self.__controlador_sistema = controlador_sistema
         self.__controlador_contrato = self.__controlador_sistema.controlador_contrato
         self.__controlador_gerente = ControladorGerente(controlador_sistema)
-        self.__controlador_fun_comum = ControladorFunComum()
         self.__filial = filial
         self.__tela_filial = TelaFilial()
 
@@ -27,10 +26,6 @@ class ControladorFilial:
     @property
     def controlador_gerente(self):
         return self.__controlador_gerente
-    
-    @property
-    def controlador_fun_comum(self):
-        return self.__controlador_fun_comum
 
     def inicializa_sistema(self):
         lista_opcoes = {1: self.controlador_fun_comum_esp, 2: self.controlador_gerente_esp,
@@ -39,7 +34,6 @@ class ControladorFilial:
 
         while True:
             opcao_escolhida = self.__tela_filial.mostra_opcoes()
-            print("\nfun_comum:", len(self.__controlador_fun_comum.fun_comum_dao.get_all()))
             funcao_escolhida = lista_opcoes[opcao_escolhida]
             funcao_escolhida()
 
@@ -50,23 +44,27 @@ class ControladorFilial:
         ControladorGerenteEsp(self, self.__filial.gerente).inicializa_sistema()
 
     def modificar_dados(self):
+        # Realizando a chamada do menu de modificação
         opcao = self.__tela_filial.menu_modificacao()
+        # Checagem de CEP para a troca
         if opcao == 1:
             while True:
-                cep_novo = self.__tela_filial.mod_cep()
+                cep_novo = self.__tela_filial.pega_input('Digite o novo CEP: ', 'Controle de Filiais')
                 if self.__controlador_sistema.checagem_repeticao_cep(cep_novo):
+                    cep_novo = self.__tela_filial.formata_cep(cep_novo)
                     break
             self.__filial.cep = cep_novo
-            self.__controlador_sistema.filial_dao.update(self.__filial)
-
-        elif opcao == 2:
+        # Checagem de cidade para troca
+        if opcao == 2:
             while True:
-                cidade_nova = self.__tela_filial.mod_cidade()
+                cidade_nova = self.__tela_filial.pega_input('Digite a nova cidade: ', 'Controle de Filiais')
                 if self.__controlador_sistema.checagem_repeticao_cidade(cidade_nova):
                     break
             self.__filial.cidade = cidade_nova
+        # Update do DAO
+        if opcao != 0:
+            print(self.__filial.cep)
             self.__controlador_sistema.filial_dao.update(self.__filial)
-
         elif opcao == 0:
             return
 
@@ -74,9 +72,9 @@ class ControladorFilial:
         contratos = self.__controlador_contrato.contrato_dao.get_all()
         contratos_locais = []
         for contrato in contratos:
-            if contrato.filial == self.__filial:
+            if contrato.filial.cep == self.__filial.cep:
                 contratos_locais.append(contrato)
-        self.__controlador_contrato.listar_contrato_auto(contratos_locais)
+        self.__controlador_contrato.listar_contrato(contratos_locais)
 
     def listar_fun_ativos(self):
         gerente = self.__filial.gerente

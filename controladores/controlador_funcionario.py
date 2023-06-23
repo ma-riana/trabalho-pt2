@@ -1,24 +1,38 @@
 from abc import ABC, abstractmethod
+from dao.fun_comum_dao import FunComumDAO
+from dao.gerente_dao import GerenteDAO
+from exception.repeticao_exp import Repeticao
 
 class ControladorFuncionario(ABC):
 
-    @abstractmethod
     def __init__(self):
-        pass
+        self.__gerente_dao = GerenteDAO()
+        self.__fun_comum_dao = FunComumDAO()
 
-    @abstractmethod
-    def pega_fun_por_cep(self):
-        pass
+    @property
+    def gerente_dao(self):
+        return self.__gerente_dao
 
-    @abstractmethod
-    def demitir(self):
-        pass
+    @property
+    def fun_comum_dao(self):
+        return self.__fun_comum_dao
 
-    @abstractmethod
-    def transferir(self):
-        pass
+    def todos_funcionarios(self):
+        funcionarios = []
+        for fun in self.__gerente_dao.get_all():
+            funcionarios.append(fun)
+        for fun in self.__fun_comum_dao.get_all():
+            funcionarios.append(fun)
+        return funcionarios
 
-    @abstractmethod
-    def mudar_cargo(self):
-        pass
-
+    def repeticao_cpf(self, cpf):
+        while True:
+            try:
+                funcionarios = self.todos_funcionarios()
+                if funcionarios is not None:
+                    for fun in funcionarios:
+                        if fun.cpf == cpf:
+                            raise Repeticao('CPF', cpf)
+                return True
+            except Repeticao:
+                return False

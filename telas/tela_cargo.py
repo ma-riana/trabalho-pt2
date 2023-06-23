@@ -57,17 +57,22 @@ class TelaCargo(AbstractTela):
         return f'ID: {id}\nTítulo: {titulo}\nSalário: {salario}\n'
 
     def pega_cargo(self, lista):
-
+        # Definição do layout para a lista de cargos
         layout = [[sg.Text('Selecionador de cargos. Faça a busca por id.')]]
         lista_cargos = ''
         for cargo in lista:
-            lista_cargos += f'ID: {cargo.id}\nTítulo: {cargo.titulo}\n'
+            # Tirando a opção de cadastro de gerente
+            if cargo.id != 0:
+                lista_cargos += f'ID: {cargo.id}\nTítulo: {cargo.titulo}\n'
+
+        # Atribuição ao layout
         layout.append([sg.Multiline(default_text=lista_cargos, size=(35, 3))])
         layout.append([sg.Text('ID para a busca:', size=(15, 1)), sg.InputText('', key='id')])
         layout.append([sg.Button('Confirmar'), sg.Button('Cancelar')])
         layout.append( [sg.Text(size=(15, 1), key='-OUTPUT-')])
         self.__window = sg.Window('Controle de cargos', layout, element_justification='c')
 
+        # Checagem de opções
         while True:
             event, values = self.__window.read()
             if event == 'Confirmar':

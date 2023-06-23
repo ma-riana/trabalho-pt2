@@ -42,8 +42,9 @@ class TelaFilial(AbstractTela):
         ]
         self.__window = sg.Window('Controle da Filial', layout, element_justification='c')
         event, values = self.__window.Read()
-        self.__window.Close()
+        self.__window.close()
         return int(event)
+
     
     def mod_cep(self):
         layout = [

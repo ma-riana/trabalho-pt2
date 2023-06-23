@@ -52,7 +52,7 @@ class TelaContrato(AbstractTela):
         else:
             empregador = contrato.empregador.nome
         return f'''
-        === CONTRATO NUM {contrato.id} ===
+            ===== CONTRATO =====
             Funcionario: {contrato.empregado.nome}
             CPF: {contrato.empregado.cpf}
             Empregador: {empregador}
@@ -61,28 +61,6 @@ class TelaContrato(AbstractTela):
             Data de emissão: {contrato.data_inicio}
             Data de termino: {contrato.data_final}
         '''
-
-    def pega_filial(self):
-        layout = [
-            [sg.Text('Modificação de Contrato')],
-            [sg.Text('Digite no campo abaixo o CEP da filial')],
-            [sg.Text(size=(15, 1), key='-OUTPUT-')],
-            [sg.Text('CEP:', size=(15, 1)), sg.InputText('', key='cep')],
-            [sg.Button('Confirmar'), sg.Cancel('Cancelar')]
-        ]
-        self.__window = sg.Window('Controle do Contrato', layout, element_justification='c')
-
-        while True:
-            event, values = self.__window.Read()
-            if event == 'Confimar':
-                if self.le_cep(values['cep']):
-                    cep = self.formata_cep(values['cep'])
-                    return cep
-                else:
-                    self.__window['-OUTPUT-'].update('Digite um CEP válido.')
-            if event in [sg.WIN_CLOSED, 'Cancelar']:
-                self.__window.close()
-                return None
     
     def pega_data(self, msg):
         data = self.pega_input(msg, 'Controle do Contrato')

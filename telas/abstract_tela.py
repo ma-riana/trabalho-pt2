@@ -90,4 +90,3 @@ class AbstractTela(ABC):
         event = self.__window.Read()
         if event == sg.WIN_CLOSED:
             self.init_components()
-

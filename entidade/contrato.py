@@ -6,11 +6,9 @@ from datetime import date
 from entidade.fun_comum import FunComum
 
 
-
 class Contrato:
-    def __init__(self, id: int, data_inicio: date, cargo: Cargo, empregado: Funcionario,
+    def __init__(self, data_inicio: date, cargo: Cargo, empregado: Funcionario,
                  filial: Filial, empregador: Gerente):
-        self.__id = id
         self.__data_inicio = data_inicio
         self.__data_final = None
         self.__cargo = cargo
@@ -23,10 +21,6 @@ class Contrato:
             self.__filial.add_fun_comum(self.__empregado)
         elif isinstance(self.__empregado, Gerente):
             self.__filial.gerente = self.__empregado
-
-    @property
-    def id(self):
-        return self.__id
 
     @property
     def data_inicio(self):

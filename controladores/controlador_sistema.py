@@ -1,6 +1,7 @@
 from entidade.filial import Filial
 from controladores.controlador_filial import ControladorFilial
 from controladores.controlador_gerente import ControladorGerente
+from controladores.controlador_fun_comum import ControladorFunComum
 from controladores.controlador_contrato import ControladorContrato
 from controladores.controlador_cargo import ControladorCargo
 from telas.tela_sistema import TelaSistema
@@ -15,6 +16,7 @@ class ControladorSistema:
         self.__tela_sistema = TelaSistema()
         self.__controlador_cargo = ControladorCargo(self)
         self.__controlador_gerente = ControladorGerente(self)
+        self.__controlador_fun_comum = ControladorFunComum()
         self.__controlador_contrato = ControladorContrato(self)
         self.__filial_dao = FilialDAO()
 
@@ -29,6 +31,10 @@ class ControladorSistema:
     @property
     def controlador_gerente(self):
         return self.__controlador_gerente
+
+    @property
+    def controlador_fun_comum(self):
+        return self.__controlador_fun_comum
 
     @property
     def controlador_cargo(self):
@@ -111,10 +117,10 @@ class ControladorSistema:
             self.__tela_sistema.mostra_mensagem(Repeticao('Cidade', cidade).msg())
             return False
 
-    def busca_por_cep(self, titulo):
+    def busca_por_cep(self, msg):
         while True:
             try:
-                cep_buscado = self.__tela_sistema.pega_cep(titulo)
+                cep_buscado = self.__tela_sistema.pega_cep(msg)
                 if cep_buscado is None:
                     return None
                 for _ in self.__filial_dao.get_all():

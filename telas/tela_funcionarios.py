@@ -54,8 +54,8 @@ class TelaFuncionario(AbstractTela):
                 break
         self.__window.close()
 
-    def formata_listagem(self, nome, cpf, data_nasc):
-        return f'Nome: {nome}\nCPF: {cpf}\nData nascimento: {data_nasc}\n'
+    def formata_listagem(self, nome, cpf, data_nasc, status):
+        return f'Nome: {nome}\nCPF: {cpf}\nData nascimento: {data_nasc}\nStatus: {status}\n'
 
     def pega_cpf(self, msg):
         while True:
