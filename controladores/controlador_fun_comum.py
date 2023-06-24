@@ -8,5 +8,6 @@ class ControladorFunComum(ControladorFuncionario):
         super().__init__()
         self.__fun_comum_dao = super().fun_comum_dao
 
-    def add_fun_comum(self, fun_comum):
-        self.__fun_comum_dao.add(fun_comum)
+    @property
+    def fun_comum_dao(self):
+        return self.__fun_comum_dao

@@ -63,7 +63,7 @@ class TelaCargo(AbstractTela):
         for cargo in lista:
             # Tirando a opção de cadastro de gerente
             if cargo.id != 0:
-                lista_cargos += f'ID: {cargo.id}\nTítulo: {cargo.titulo}\n'
+                lista_cargos += f'ID: {cargo.id} Título: {cargo.titulo}\n'
 
         # Atribuição ao layout
         layout.append([sg.Multiline(default_text=lista_cargos, size=(35, 3))])

@@ -28,6 +28,7 @@ class ControladorGerenteEsp(ControladorFuncionario):
         if opcao == 1:
             novo_nome = self.__tela_gerente.pega_input("Digite o novo nome:", 'Modificação de dados.')
             self.__gerente.nome = novo_nome
+            super().gerente_dao.update(self.__gerente)
         if opcao == 2:
             # Checagem de repetição de CPF durante a troca
             while True:
@@ -37,11 +38,13 @@ class ControladorGerenteEsp(ControladorFuncionario):
                     break
                 else:
                     self.__tela_gerente.mostra_mensagem('CPF já cadastrado.')
+            # Atualização do DAO. Cópia necessária pois é a modificação da chave
+            super().gerente_dao.remove(self.__gerente.cpf)
+            self.__gerente.cpf = novo_cpf
+            super().gerente_dao.add(self.__gerente)
         if opcao == 3:
             nova_data_nasc = self.__tela_gerente.pega_data('Digite a nova data de nascimento: ')
             self.__gerente.data_nasc = nova_data_nasc
-        if opcao != 0:
-            # Update do DAO
             super().gerente_dao.update(self.__gerente)
         if opcao == 0:
             return

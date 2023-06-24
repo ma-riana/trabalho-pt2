@@ -12,7 +12,7 @@ class ControladorFilial:
         self.__controlador_sistema = controlador_sistema
         self.__controlador_contrato = self.__controlador_sistema.controlador_contrato
         self.__controlador_gerente = ControladorGerente(controlador_sistema)
-        self.__filial = filial
+        self.__filial =filial
         self.__tela_filial = TelaFilial()
 
     @property
@@ -53,7 +53,9 @@ class ControladorFilial:
                 if self.__controlador_sistema.checagem_repeticao_cep(cep_novo):
                     cep_novo = self.__tela_filial.formata_cep(cep_novo)
                     break
+            self.__controlador_sistema.filial_dao.remove(self.__filial.cep)
             self.__filial.cep = cep_novo
+            self.__controlador_sistema.filial_dao.add(self.__filial)
         # Checagem de cidade para troca
         if opcao == 2:
             while True:
@@ -61,9 +63,6 @@ class ControladorFilial:
                 if self.__controlador_sistema.checagem_repeticao_cidade(cidade_nova):
                     break
             self.__filial.cidade = cidade_nova
-        # Update do DAO
-        if opcao != 0:
-            print(self.__filial.cep)
             self.__controlador_sistema.filial_dao.update(self.__filial)
         elif opcao == 0:
             return
@@ -71,6 +70,7 @@ class ControladorFilial:
     def acessar_contratos(self):
         contratos = self.__controlador_contrato.contrato_dao.get_all()
         contratos_locais = []
+        contratos_locais.append(self.__controlador_contrato.contrato_dao.get(self.__filial.gerente.cpf))
         for contrato in contratos:
             if contrato.filial.cep == self.__filial.cep:
                 contratos_locais.append(contrato)
@@ -81,14 +81,16 @@ class ControladorFilial:
         lista_fun = self.__filial.funcionarios
         lista_listagem = []
 
-        lista_listagem.append(self.__tela_filial.formata_listagem(gerente.nome, gerente.cpf, gerente.data_nasc))
+        lista_listagem.append(self.__tela_filial.formata_listagem(gerente.nome, gerente.cpf,
+                                                                  gerente.data_nasc, gerente.atividade))
         if len(lista_fun) > 0:
             for fun in lista_fun:
                 if fun.atividade is True:
-                    lista_listagem.append(self.__tela_filial.formata_listagem(fun.nome, fun.cpf, fun.data_nasc))
-                self.__tela_filial.listagem('Lista de funcionários ativos', lista_listagem)
+                    lista_listagem.append(self.__tela_filial.formata_listagem(fun.nome, fun.cpf,
+                                                                              fun.data_nasc, fun.atividade))
         else:
             self.__tela_filial.mostra_mensagem('Lista de funcionários comuns vazia.')
+        self.__tela_filial.listagem('Lista de funcionários ativos', lista_listagem)
 
     def retornar(self):
         self.__controlador_sistema.inicializa_sistema()

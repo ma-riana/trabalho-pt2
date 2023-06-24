@@ -15,7 +15,6 @@ class ContratoDAO(DictDAO):
             super().update(contrato.empregado.cpf, contrato)
 
     def get(self, key: str):
-        print("chave:", key)
         if isinstance(key, str):
             return super().get(key)
 

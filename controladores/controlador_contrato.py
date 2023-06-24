@@ -95,10 +95,16 @@ class ControladorContrato:
                 funcionario.atividade(False)
         if opcao == 3:
             # Utiliza-se da busca de filial do controlador do sistema
+            if isinstance(funcionario, Gerente):
+                self.__tela_contrato.mostra_mensagem('Opção não disppnível para gerente.')
+                return
             nova_filial = self.__controlador_sistema.busca_por_cep('Digite a nova filial: ')
             contrato.filial = nova_filial
         if opcao == 4:
             # Utiliza-se do selecionador de cargos do controlador de cargos
+            if isinstance(funcionario, Gerente):
+                self.__tela_contrato.mostra_mensagem('Opção não disppnível para gerente.')
+                return
             cargo_novo = self.__controlador_cargo.selecionar_cargo()
             contrato.cargo = cargo_novo
         if opcao != 0:
@@ -125,9 +131,3 @@ class ControladorContrato:
         for contrato in self.__contrato_dao.get_all():
             if contrato.empregado.cpf == cpf:
                 return contrato
-
-    def gera_id(self):
-        if len(self.__contrato_dao.get_all()) > 0:
-            return self.__contrato_dao.get_all()[-1].id + 1
-        else:
-            return 0

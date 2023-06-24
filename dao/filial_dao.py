@@ -12,12 +12,13 @@ class FilialDAO(DictDAO):
 
     def update(self, filial: Filial):
         if((filial is not None) and isinstance(filial, Filial) and isinstance(filial.cep, str)):
+            print(filial.cep)
             super().update(filial.cep, filial)
 
-    def get(self, key:str):
+    def get(self, key: str):
         if isinstance(key, str):
             return super().get(key)
 
-    def remove(self, key:str):
+    def remove(self, key: str):
         if(isinstance(key, str)):
             return super().remove(key)

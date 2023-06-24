@@ -47,7 +47,7 @@ class ControladorGerente(ControladorFuncionario):
         dados_contrato = {'data_inicio': infos_gerencia['data_inicio'], 'cargo': infos_gerencia['cargo'],
                           'empregado': infos_gerencia['funcionario'], 'filial': filial,
                           'empregador': infos_gerencia['empregador']}
-        self.__controlador_contrato.incluir_contrato(dados_contrato)
+        self.__controlador_sistema.controlador_contrato.incluir_contrato(dados_contrato)
 
         # Update do DAO da filial com as novas informações
         filial.gerente = infos_gerencia['funcionario']

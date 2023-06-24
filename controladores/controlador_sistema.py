@@ -79,7 +79,6 @@ class ControladorSistema:
             self.__filial_dao.remove(filial.cep)
             self.__tela_sistema.mostra_mensagem('Filial excluída com sucesso.')
 
-
     def modificar_filial(self):
         filial = self.busca_por_cep('Identificação de filial por CEP')
         if filial is None:

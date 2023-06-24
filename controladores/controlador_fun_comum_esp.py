@@ -31,10 +31,13 @@ class ControladorFunComumEsp(ControladorFuncionario):
     def modificar_dados(self):
         # Modificação dos funcionários da filial atual
         funcionario = self.busca_fun_por_cpf("Digite o CPF do funcionário para modificação: ")
+        if funcionario is None:
+            return
         opcao = self.__tela_fun_comum.menu_modificacao()
         if opcao == 1:
             novo_nome = self.__tela_fun_comum.pega_input("Digite o novo nome:", 'Modificação de dados.')
             funcionario.nome = novo_nome
+            super().fun_comum_dao.update(funcionario)
         if opcao == 2:
             # Checagem de CPF para a modificação
             while True:
@@ -44,11 +47,13 @@ class ControladorFunComumEsp(ControladorFuncionario):
                     break
                 else:
                     self.__tela_fun_comum.mostra_mensagem('CPF já cadastrado.')
+            # Atualização do DAO. Cópia necessária pois é a modificação da chave
+            super().fun_comum_dao.remove(funcionario.cpf)
+            funcionario.cpf = novo_cpf
+            super().fun_comum_dao.add(funcionario)
         if opcao == 3:
             nova_data_nasc = self.__tela_fun_comum.pega_data('Digite a nova data de nascimento: ')
             funcionario.data_nasc = nova_data_nasc
-        if opcao != 0:
-            # Update do DAO
             super().fun_comum_dao.update(funcionario)
         if opcao == 0:
             return
@@ -83,9 +88,14 @@ class ControladorFunComumEsp(ControladorFuncionario):
         fun_comum = self.busca_fun_por_cpf("Digite o CPF do funcionário para a demissão: ")
         if fun_comum is None:
             return
-        # Demissão no contrato e update do DAO
-        self.__controlador_contrato.demitir(fun_comum)
-        super().fun_comum_dao.update(fun_comum)
+        # Checagem se o funcionário já está demitido
+        if fun_comum.atividade:
+            # Demissão no contrato e update do DAO
+            self.__controlador_contrato.demitir(fun_comum)
+            fun_comum.atividade = False
+            super().fun_comum_dao.update(fun_comum)
+        else:
+            self.__tela_fun_comum.mostra_mensagem('Não é possível demitir um funcionário já demitido.')
 
     def acessar_contrato(self):
         # Acesso ao menu do contrato de um funcionário específico

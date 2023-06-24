@@ -73,10 +73,3 @@ class TelaContrato(AbstractTela):
                     return data
                 else:
                     self.mostra_mensagem('Digite uma data válida.')
-
-    def pega_cargo(self, msg):
-        nome_cargo = input(msg)
-        return nome_cargo
-    
-    def mostra_mensagem(self, msg):
-        sg.popup("", msg)

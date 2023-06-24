@@ -75,8 +75,12 @@ class TelaFilial(AbstractTela):
         self.__window.Close()
         return values['cidade']
 
-    def formata_listagem(self, nome, cpf, data_nasc):
-       return f'Nome: {nome}\nCPF: {cpf}\nData de Nasc: {data_nasc}\n'
+    def formata_listagem(self, nome, cpf, data_nasc, status):
+        if status == True:
+            status = 'Ativo'
+        else:
+            status = 'Não ativo'
+        return f'Nome: {nome}\nCPF: {cpf}\nData nascimento: {data_nasc}\nStatus: {status}\n'
 
     def close(self):
         self.__window.Close()
