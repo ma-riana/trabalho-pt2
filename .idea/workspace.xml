@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fff7d9e2-943f-45d8-a2dd-e77b5804ce0a" name="Changes" comment="Trabalho OK" />
+    <list default="true" id="fff7d9e2-943f-45d8-a2dd-e77b5804ce0a" name="Changes" comment="Trabalho OK">
+      <change beforePath="$PROJECT_DIR$/../../../../trabalho_ver_final/trabalho_ver_final/controladores/controlador_cargo.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../trabalho_ver_final/trabalho_ver_final/controladores/controlador_cargo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../trabalho_ver_final/trabalho_ver_final/controladores/controlador_contrato.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../trabalho_ver_final/trabalho_ver_final/controladores/controlador_contrato.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../trabalho_ver_final/trabalho_ver_final/controladores/controlador_funcionario.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../trabalho_ver_final/trabalho_ver_final/controladores/controlador_funcionario.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -21,9 +25,10 @@
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
         <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$/../../../../trabalho_ver_final/trabalho_ver_final" value="master" />
       </map>
     </option>
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../../../trabalho_ver_final/trabalho_ver_final" />
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/controladores/controlador_contrato.py" root0="SKIP_INSPECTION" />
@@ -55,6 +60,7 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "nao__consigo__dar__push2",
     "last_opened_file_path": "D:/Downloads/trabalho_ver_final",
     "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
@@ -102,7 +108,14 @@
       <option name="project" value="LOCAL" />
       <updated>1687547430170</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Trabalho OK">
+      <created>1687731534957</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1687731534957</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -118,7 +131,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Telas do Sistema principal finalizadas, Filial iniciada" />
-    <option name="LAST_COMMIT_MESSAGE" value="Telas do Sistema principal finalizadas, Filial iniciada" />
+    <MESSAGE value="Trabalho OK" />
+    <option name="LAST_COMMIT_MESSAGE" value="Trabalho OK" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

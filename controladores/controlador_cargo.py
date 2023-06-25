@@ -1,6 +1,6 @@
 from telas.tela_cargo import TelaCargo
 from entidade.cargo import Cargo
-from dao import CargoDAO
+from dao.cargo_dao import CargoDAO
 
 
 class ControladorCargo:

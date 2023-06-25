@@ -1,5 +1,5 @@
 from abc import ABC
-from dao import FunComumDAO
+from dao.fun_comum_dao import FunComumDAO
 from dao.gerente_dao import GerenteDAO
 from exception.repeticao_exp import Repeticao
 

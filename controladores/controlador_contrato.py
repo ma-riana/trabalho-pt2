@@ -1,6 +1,6 @@
 from entidade.contrato import Contrato
 from telas.tela_contrato import TelaContrato
-from dao import ContratoDAO
+from dao.contrato_dao import ContratoDAO
 from entidade.fun_comum import FunComum
 from entidade.gerente import Gerente
 
